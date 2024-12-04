@@ -15,8 +15,8 @@
             
                 <div class="box">
                     <h3>welcome!</h3>
-                    <p>5</p>
-                    <a href="./update_profile.php" class="btn">update profile</a>
+                    <p>{{Auth::guard('admin')->user()->name}}</p>
+                    <a href="{{url('admin_update_profile', Auth::guard('admin')->user()->id)}}" class="btn">update profile</a>
                 </div>
             
                 <div class="box">
@@ -41,27 +41,27 @@
                 </div>
             
                 <div class="box">
-                    <h3>6</h3>
+                    <h3>{{$products_total}}</h3>
                     <p>products added</p>
-                    <a href="./products.php" class="btn">see products</a>
+                    <a href="{{url('/products')}}" class="btn">see products</a>
                 </div>
             
                 <div class="box">
-                    <h3>8</h3>
+                    <h3>{{$user_account_total}}</h3>
                     <p>users accounts</p>
-                    <a href="./users_accounts.php" class="btn">see users</a>
+                    <a href="{{url('user_accounts')}}" class="btn">see users</a>
                 </div>
             
                 <div class="box">
-                    <h3>2</h3>
+                    <h3>{{$admin_account_total}}</h3>
                     <p>admins</p>
-                    <a href="./admin_accounts.php" class="btn">see admins</a>
+                    <a href="{{url('admin_accounts')}}" class="btn">see admins</a>
                 </div>
             
                 <div class="box">
-                    <h3>1</h3>
+                    <h3>{{$total_messages}}</h3>
                     <p>new messages</p>
-                    <a href="./messages.php" class="btn">see messages</a>
+                    <a href="{{url('/messages')}}" class="btn">see messages</a>
                 </div>
         </div>
     </section>

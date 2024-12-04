@@ -9,13 +9,12 @@
     <section class="user-details">
         <div class="user">
             <img src="{{asset('images/user-icon.png')}}" alt="">
-            <p><i class="fas fa-user"></i><span>shaikh anas</span></p>
-            <p><i class="fas fa-phone"></i><span>123456789</span></p>
-            <p><i class="fas fa-envelope"></i><span>shaikhanas@gmail.com</span></p>
-            <a href="{{url('/update_profile')}}" class="btn">update info</a>
-            <p class="address"><i class="fas fa-map-marker-alt"></i><span>flat no. 1, building no.1, jogeshwari 
-            west, mumbai, india - 400104</span></p>
-            <a href="{{url('update_address')}}" class="btn">update address</a>
+            <p><i class="fas fa-user"></i><span>{{$user->name}}</span></p>
+            <p><i class="fas fa-phone"></i><span>{{$user->number}}</span></p>
+            <p><i class="fas fa-envelope"></i><span>{{$user->email}}</span></p>
+            <a href="{{route('user.profile_edit', $user->id)}}" class="btn">update info</a>
+            <p class="address"><i class="fas fa-map-marker-alt"></i><span>{{$user->address}}</span></p>
+            <a href="{{route('user.address_edit', $user->id)}}" class="btn">update address</a>
         </div>
     </section> 
 

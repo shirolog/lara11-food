@@ -23,13 +23,4 @@
     $menuBtn.classList.remove("fa-times");
   });
 
-  //update.phpページの画像の切り替え設定
-  const $largeImage = document.querySelector(".main-image img");
-  const $smallImage = document.querySelectorAll(".sub-images img");
-
-  $smallImage.forEach((small) => {
-    small.addEventListener("click", () => {
-      $largeImage.setAttribute("src", small.getAttribute("src"));
-    });
-  });
 })();

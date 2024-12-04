@@ -40,7 +40,7 @@
                 <p class="invalid-feedback">{{$message}}</p> 
             @enderror
             <input type="submit" class="btn" value="login now">
-            <p>don't have an account? <a href="{{url('/admin_register')}}">register now</a></p>
+            <p class="link">don't have an account? <a href="{{url('/admin_register')}}">register now</a></p>
         </form>
     </section>
 

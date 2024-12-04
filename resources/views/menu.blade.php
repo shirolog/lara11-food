@@ -15,125 +15,33 @@
         <h1 class="title">latest dishes</h1>
 
         <div class="box-container">
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/burger-1.png')}}" alt="">
-                <a href="#" class="cat">fast food</a>
-                <div class="name">chezzy burger 01</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
+            @if($products->isNotEmpty())
+                @foreach($products as $product)
+                    <form action="{{route('user.add_cart')}}" method="post" class="box">
+                        @csrf
+                        <input type="hidden" name="pid" value="{{$product->id}}">
+                        <input type="hidden" name="name" value="{{$product->name}}">
+                        <input type="hidden" name="price" value="{{$product->price}}">
+                        <input type="hidden" name="image" value="{{$product->image}}">
+                        <a href="{{route('user.quick_view', $product->id)}}"><i class="fas fa-eye"></i></a>
+                        <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
+                        <img src="{{asset('uploaded_img/'. $product->image)}}" alt="">
+                        <a href="#" class="cat">{{$product->category->name}}</a>
+                        <div class="name">{{$product->name}}</div>
+                        <div class="flex">
+                            <div class="price"><span>$</span>{{number_format($product->price)}}/-</div>
+                            <input type="number" name="quantity" class="qty" min="1" max="99"
+                            onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
+                        </div>
+                    </form>
+                @endforeach
+            @endif
 
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/dish-1.png')}}" alt="">
-                <a href="#" class="cat">dishes</a>
-                <div class="name">main dish 01</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/dessert-1.png')}}" alt="">
-                <a href="#" class="cat">desserts</a>
-                <div class="name">delicious dessert 01</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/drink-1.png')}}" alt="">
-                <a href="#" class="cat">drinks</a>
-                <div class="name">cold drink 01</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/pizza-1.png')}}" alt="">
-                <a href="#" class="cat">fast food</a>
-                <div class="name">delicious pizza 01</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/dish-2.png')}}" alt="">
-                <a href="#" class="cat">dishes</a>
-                <div class="name">main dish 02</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/pizza-2.png')}}" alt="">
-                <a href="#" class="cat">fast food</a>
-                <div class="name">delicious pizza 02</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/dessert-2.png')}}" alt="">
-                <a href="#" class="cat">desserts</a>
-                <div class="name">delicious dessert 02</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
-
-            <form action="" method="post" class="box">
-                <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                <img src="{{asset('project images/drink-2.png')}}" alt="">
-                <a href="#" class="cat">drinks</a>
-                <div class="name">cold drink 02</div>
-                <div class="flex">
-                    <div class="price"><span>$</span>3</div>
-                    <input type="number" name="qty" class="qty" min="1" max="99"
-                    onkeypress="if(this.value.length == 2) return false;" value="1" id="qty">
-                </div>
-            </form>
         </div>
 
-
+        @if($products->isNotEmpty())
+            <div class="page mt-5" style="width: 100%;">{!! $products->links('vendor.pagination.bootstrap-5') !!}</div>
+        @endif
     </section> 
 
 

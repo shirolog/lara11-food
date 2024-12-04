@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\Category;
+use App\Models\Message;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Http\Request;
@@ -25,26 +29,23 @@ class AdminController extends Controller
 
         $validator = Validator::make($request->all(), [
 
-            'name' => 'required|max:50',
-            'email' => 'required|email|unique:users,email',
+            'name' => 'required|max:50|unique:admins,name',
+            'email' => 'required|email|unique:admins,email',
             'password' => 'required|min:3|confirmed',
             'password_confirmation' => 'required',
-        ],[
-            'email.unique' => 'email is already taken!',
-            'password.confirmed' => 'confirm password not matched!',
-        ]);
+        ],);
 
         if($validator->fails()){
 
             return redirect()->route('admin.admin_register')->withInput()->withErrors($validator);
         }
 
-        $user = new User;
+        $admin = new Admin;
 
-        $user->name =$request->input('name');
-        $user->email =$request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
+        $admin->name =$request->input('name');
+        $admin->email =$request->input('email');
+        $admin->password = Hash::make($request->input('password'));
+        $admin->save();
 
         return redirect()->route('admin.admin_login')->with('success', 'You have registered successfully!');
     }
@@ -55,12 +56,13 @@ class AdminController extends Controller
     public function admin_login(){
 
         return view('admin.admin_login');
+        
     }
 
     public function authenticate(Request $request){
         
         $validator = Validator::make($request->all(),[
-            'name' => 'required|max:50',
+            'name' => 'required|max:50|',
             'password' => 'required',
         ]);
 
@@ -71,11 +73,11 @@ class AdminController extends Controller
 
     
 
-        if(Auth::attempt(['name' => $request->input('name'), 'password' => $request->input('password')])){
+        if(Auth::guard('admin')->attempt(['name' => $request->input('name'), 'password' => $request->input('password')])){
 
-            $user = Auth::user();
+            $admin = Auth::guard('admin')->user();
 
-            if($user->role == 'admin'){
+            if($admin->role == 'admin'){
 
                 return redirect()->route('admin.dashboard');
 
@@ -89,7 +91,7 @@ class AdminController extends Controller
 
         }else{
 
-            return redirect()->route('admin.admin_login')->with('error', 'name or password is incorect!');
+            return redirect()->route('admin.admin_login')->with('error', 'Name or password is incorect!');
         }
 
         
@@ -101,7 +103,16 @@ class AdminController extends Controller
 
     public function dashboard(){
 
-        return view('admin.dashboard');
+        $user_account_total = User::all()->count();
+
+        $admin_account_total = Admin::all()->count();
+        
+        $products_total = Product::all()->count();
+
+        $total_messages = Message::all()->count();
+
+        return view('admin.dashboard', compact('user_account_total',
+        'admin_account_total', 'products_total', 'total_messages'));
     }
 
 
@@ -109,7 +120,23 @@ class AdminController extends Controller
 
     public function admin_accounts(){
 
-        return view('admin.admin_accounts');
+        $admins = Admin::orderBy('created_at', 'ASC')->paginate(10);
+
+        return view('admin.admin_accounts', compact('admins'));
+    }
+
+
+    public function admin_accounts_destroy(Admin $admin){
+        
+        $admin->delete();
+
+        session()->flash('success', 'Account deleted successfully!');
+
+        return response()->json([
+
+            'status' => true,
+        ]);
+
     }
 
 
@@ -125,39 +152,211 @@ class AdminController extends Controller
 
     public function messages(){
 
-        return view('admin.messages');
+        $messages = Message::orderBy('created_at', 'ASC')->paginate(6);
+
+        return view('admin.messages', compact('messages'));
     }
+
+
+    public function messages_destroy(Message $message){
+
+        $message->delete();
+
+        session()->flash('success', 'Message deleted successfully!');
+
+        return response()->json([
+
+            'status' => true
+        ]);
+
+    }
+
 
 
 //productsページに関する記述
 
     public function products(){
 
-        return view('admin.products');
+        $categories = Category::all();
+
+        $products = Product::orderBy('created_at', 'ASC')->with('category')->paginate(6);
+
+        return view('admin.products', compact('categories', 'products'));
+    }
+
+
+    public function products_store(Request $request){
+
+        $validator = Validator::make($request->all(), [
+
+            'name' => 'required|max:50|unique:products,name',
+            'category_id' => 'required',
+            'price'  => 'required|numeric|min:0',
+            'image' => 'required|image|mimes:jpg,jpeg,webp,png',
+        ]);
+
+        if($validator->fails()){
+
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $product = new Product;
+
+        $product->name = $request->input('name');
+        $product->category_id = $request->input('category_id');
+        $product->price = $request->input('price');
+
+        if(!empty($request->file('image'))){
+
+           $image = $request->file('image');
+            $ext = $image->getClientOriginalExtension();
+            $imageName = time().'.'.$ext;
+            $image->move(public_path('uploaded_img/'), $imageName);
+            $product->image = $imageName;
+            $product->save();
+        }
+
+        return redirect()->back()->with('success', 'Product added successfully!');
+
+    }
+
+
+    public function products_destroy(Product $product){
+
+        $product->delete();
+
+        $old_image = public_path('uploaded_img/'. $product->image);
+
+        if(is_file($old_image)){
+            unlink($old_image);
+        }
+
+        session()->flash('success', 'Product deleted successfully!');
+
+        return response()->json([
+            'status' => true,
+        ]);
+
+
     }
 
     
 //update_productページに関する記述
 
-    public function update_product(){
+    public function product_edit(Product $product){
 
-        return view('admin.update_product');
+        $categories = Category::all();
+
+        return view('admin.update_product', compact('product', 'categories'));
     }
+
+
+    public function product_update(Request $request, Product $product){
+
+        $validator = Validator::make($request->all(), [
+
+            'name' => 'nullable|max:50|unique:products,name,'. $product->id,
+            'category_id' => 'nullable',
+            'price'  => 'nullable|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpg,jpeg,webp,png',
+        ]);
+
+        if($validator->fails()){
+
+            return redirect()->route('admin.product_edit', $product->id)->withInput()->withErrors($validator);
+        }
+
+        $product->name = $request->input('name');
+        $product->category_id = $request->input('category_id');
+        $product->price = $request->input('price');
+        $product->save();
+
+        if(!empty($request->file('image'))){
+
+            $old_image = public_path('uploaded_img/'. $product->image);
+
+            if(is_file($old_image)){
+                unlink($old_image);
+            }
+
+            $image = $request->file('image');
+            $ext = $image->getClientOriginalExtension();
+            $imageName = time(). '.'. $ext;
+            $image->move(public_path('uploaded_img/'), $imageName);
+            $product->image = $imageName;
+            $product->save();
+        }
+
+        return redirect()->route('admin.product_edit', $product->id)->with('success', 'Product updated successfully!');
+
+
+    }
+
 
 
 //update_profileページに関する記述
 
-    public function update_profile(){
+    public function profile_edit(Admin $admin){
 
-        return view('admin.update_profile');
+ 
+        return view('admin.update_profile', compact('admin'));
+    }
+
+
+
+    public function profile_update(Request $request, Admin $admin){
+
+        $validator = Validator::make($request->all(), [
+
+            'name' => 'required|unique:admins,name,'. $admin->id,
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed|min:3',
+            'new_password_confirmation' => 'required',
+        ],);
+
+        if($validator->fails()){
+
+            return redirect()->route('admin.profile_edit', $admin->id)->withInput()->withErrors($validator);
+        }
+
+        $old_pass = $request->input('old_password');
+
+        if(!Hash::check($old_pass, $admin->password)){
+
+            return redirect()->route('admin.profile_edit', $admin->id)->with('error', 'Old password incorrect!');
+        }
+
+        $admin->name = $request->input('name');
+        $admin->password = Hash::make($request->input('new_password'));
+        $admin->save();
+
+        return redirect()->route('admin.profile_edit', $admin->id)->with('success', 'Profile updated successfully!');
+
     }
 
 
 //user_accountsページに関する記述
 
     public function user_accounts(){
+        
+        $users = User::orderBy('created_at', 'ASC')->paginate(10);
 
-        return view('admin.user_accounts');
+
+        return view('admin.user_accounts', compact('users'));
+    }
+
+
+    public function user_accounts_destroy(User $user){
+
+        $user->delete();
+
+        session()->flash('success', 'Account deleted successfully!');
+
+
+        return response()->json([
+            'status' => true,
+        ]);
+
     }
 
 
@@ -165,7 +364,7 @@ class AdminController extends Controller
 
     public function logout(Request $request){
 
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

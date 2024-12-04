@@ -21,14 +21,14 @@
     </div>
 
     <div class="profile">
-        @auth
-            <p>{{Auth::user()->name}}</p>
-            <a href="{{url('/update_profile')}}" class="btn">update profile</a>
+        @auth('admin')
+            <p>{{Auth::guard('admin')->user()->name}}</p>
+            <a href="{{url('/admin_update_profile', Auth::guard('admin')->user()->id)}}" class="btn">update profile</a>
             <div class="flex-btn">
                 <a href="{{url('/admin_login')}}" class="option-btn">login</a>
                 <a href="{{url('/admin_register')}}" class="option-btn">register</a>
             </div>
-            <a href="{{route('admin.logout')}}" class="delete-btn"
+            <a href="{{route('admin.logout')}}" class="logout-btn"
             onclick="return confirm('logout from this website?');">logout</a>
         @else            
 

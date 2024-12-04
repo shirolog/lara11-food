@@ -22,8 +22,8 @@
             @auth
                 <p class="name">{{Auth::user()->name}}</p>
                 <div class="flex">
-                    <a href="{{url('/profile')}}" class="btn">profile</a>
-                    <a href="{{route('user.logout')}}" class="delete-btn" onclick="return confirm('logout from this website?');">logout</a>
+                    <a href="{{url('/profile', Auth::user()->id)}}" class="btn">profile</a>
+                    <a href="{{route('user.logout')}}" class="logout-btn" onclick="return confirm('logout from this website?');">logout</a>
                 </div>
                 <p class="account"><a href="{{url('/login')}}">login</a> or  <a href="{{url('/register')}}">register</a></p>
             @else

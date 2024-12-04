@@ -33,7 +33,7 @@
                 <p class="invalid-feedback">{{$message}}</p> 
             @enderror
             <input type="submit" class="btn" value="register now">
-            <p>already have an account? <a href="{{url('/admin_login')}}">login now</a></p>
+            <p class="link">already have an account? <a href="{{url('/admin_login')}}">login now</a></p>
         </form>
     </section>
 @endsection

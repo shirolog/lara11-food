@@ -14,20 +14,20 @@ class CheckAdmin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next): Response
     {   
         // ユーザーがログインしていない場合
-        if (!Auth::check()) {
+        if (!Auth::guard('admin')->check()) {
             return redirect()->route('admin.admin_login');
         }
 
         // 指定されたロールと一致しない場合に404エラー
-        if (Auth::user()->role != $role) {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role != 'admin') {
             abort(404, 'Not found!');
         }
 
         // ユーザーのロールが 'admin' でない場合はリダイレクト
-        if ($role === 'admin' && Auth::user()->role != 'admin') {
+        if (Auth::guard('admin')->user()->role != 'admin') {
             return redirect()->route('user.home');
         }
 

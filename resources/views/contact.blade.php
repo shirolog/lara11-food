@@ -17,15 +17,28 @@
             <img src="{{asset('images/contact-img.svg')}}" alt="">
         </div>
         
-            <form action="" method="post">
+            <form action="{{route('user.contact_store')}}" method="post">
+              @csrf
                 <h3>tell us something!</h3>
                 <input type="text" name="name" class="box" maxlength="50"
                 placeholder="enter your name" required>
-                <input type="number" name="number" class="box" min="0" max="999999999"
-                placeholder="enter your number" required onkeypress="if(this.value.length == 2) return false;">
+                @error('name')
+                  <p class="invalid-feedback">{{$message}}</p> 
+                @enderror
+                <input type="number" name="number" class="box" min="0" max="9999999999"
+                placeholder="enter your number" required oninput="this.value = this.value.replace(/\s/g, '').slice(0, 10)">
+                @error('number')
+                  <p class="invalid-feedback">{{$message}}</p> 
+                @enderror
                 <input type="email" name="email" class="box" maxlength="50"
                 placeholder="enter your email" required>
-                <textarea name="msg" class="box" cols="30" rows="10" maxlength="500" required placeholder="enter your message"></textarea>
+                @error('email')
+                  <p class="invalid-feedback">{{$message}}</p> 
+                @enderror
+                <textarea name="message" class="box" cols="30" rows="10" maxlength="500" required placeholder="enter your message"></textarea>
+                @error('message')
+                  <p class="invalid-feedback">{{$message}}</p> 
+                @enderror
                 <input type="submit" class="btn" value="send message">
             </form>
     </div>

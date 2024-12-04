@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'admin_register')
+@section('title', 'products')
 
 
 @section('content')
@@ -11,43 +11,39 @@
 
         <h1 class="heading">add product</h1>
 
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="{{route('admin.products_store')}}" method="post" enctype="multipart/form-data">
+            @csrf
             <div class="flex">
                 <div class="inputBox">
-                    <span>product name (required)</span>
+                    <span>product name </span>
                     <input type="text" name="name" class="box" placeholder="enter product name" required
                     maxlength="100">
                 </div>
 
                 <div class="inputBox">
-                    <span>product price (required)</span>
+                    <span>product price </span>
                     <input type="number" name="price" class="box" placeholder="enter product price" required
                     min="0" max="9999999999" onkeypress="if(this.value.length == 10) return false;">
                 </div>       
 
+                
                 <div class="inputBox">
-                    <span>image 01 (required)</span>
-                    <input type="file" name="image_01" class="box" accept="image/jpg, image/jpeg, image/webp,
-                    image/png" required>
+                    <span>product categories</span>
+                        <select name="category_id" id="category" class="box" required>
+                            <option value="" disabled selected>select category --</option>
+                            @foreach($categories as $category)
+                                <option value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
+                        </select>
                 </div>
 
                 <div class="inputBox">
-                    <span>image 02 (required)</span>
-                    <input type="file" name="image_02" class="box" accept="image/jpg, image/jpeg, image/webp,
+                    <span>image</span>
+                    <input type="file" name="image" class="box" accept="image/jpg, image/jpeg, image/webp,
                     image/png" required>
                 </div>
 
-                <div class="inputBox">
-                    <span>image 03 (required)</span>
-                    <input type="file" name="image_03" class="box" accept="image/jpg, image/jpeg, image/webp,
-                    image/png" required>
-                </div>
-
-                <div class="inputBox">
-                    <span>product details</span>
-                    <textarea name="details" class="box" placeholder="enter product details"
-                    cols="30" rows="10" required maxlength="500"></textarea>
-                </div>    
+    
                 <input type="submit" name="add_product" value="add product" class="btn">
             </div>
         </form>
@@ -59,28 +55,60 @@
         <h1 class="heading">products added</h1>
 
         <div class="box-container">
+            @if($products->isNotEmpty())
+                @foreach($products as $product)
 
-            <div class="box">
-                <img src="../uploaded_img/" alt="">
-                <div class="name">kkk</div>
-                <div class="price">$8/-</div>
-                <div class="details">ooo</div>
-
-                <div class="flex-btn">
-                    <a href="./update_product.php"
-                    class="option-btn">update</a>
-                    <a href="./products.php" class="delete-btn"
-                    onclick="return confirm('delete this product?');">delete</a>
-                </div>
-            </div>      
-
-
-            <p class="empty">no products added yet!</p>
+                <div class="box">
+                    <img src="{{asset('uploaded_img/'.$product->image)}}" alt="">
+                    <div class="name">{{$product->name}}</div>
+                    <div class="price">${{number_format($product->price)}}/-</div>
+                    <div class="details">{{$product->category->name}}</div>
     
-        </div>
+                    <div class="flex-btn">
+                        <a href="{{route('admin.product_edit', [$product->id, 'page' => request()->input('page')])}}" class="option-btn">update</a>
+                        <a href="javascript:avoid(0);" class="delete-btn" data-id="{{$product->id}}">delete</a>
+                    </div>
+                </div>      
+                @endforeach
+            @else
+                <p class="empty">no products added yet!</p>
+            @endif
 
+        </div>
+        @if($products->isNotEmpty())
+            <div class="page mt-5" style="width: 100%;">{!! $products->links('vendor.pagination.bootstrap-5') !!}</div>
+        @endif
     </section>
 
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        $(document).on('click', '.delete-btn', function(e){
+            e.preventDefault();
+
+            const productId = $(this).data('id');
+
+            if(confirm('Delete this product?')){
+                deleteId(productId);
+            }
+        });
+
+        function deleteId(productId){
+            $.ajax({
+                'url': '{{route("admin.products_destroy", ":id")}}'.replace(":id", productId),
+                'type': 'DELETE',
+                'headers':{
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                success:function(response){
+                    if(response.status){
+                        window.location.href = '{{route("admin.products")}}';
+                    }
+                }
+            })
+        }
+    </script>
 @endsection
 
 
