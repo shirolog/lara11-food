@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'placed_order')
+@section('title', 'completed_order')
 
 
 @section('content')
@@ -24,7 +24,7 @@
                         <p>total products : <span>{{$order->total_products}}</span></p>
                         <p>total price : <span>${{$order->total_price}}/-</span></p>
                         <p>payment method : <span>{{$order->method}}</span></p>
-                        <form action="{{route('admin.placed_orders_update', $order->id)}}" method="post">
+                        <form action="{{route('admin.completed_orders_update', $order->id)}}" method="post">
                             @csrf
                             @method('PUT')
                             <select name="status" class="drop-down">
@@ -67,7 +67,7 @@
 
         function deleteOrder(orderId){
             $.ajax({
-                'url': '{{ route("admin.placed_orders_destroy", ":id") }}'.replace(":id", orderId),
+                'url': '{{ route("admin.completed_orders_destroy", ":id") }}'.replace(":id", orderId),
                 'type':'DELETE',
                 'headers':{
                     'X-CSRF-TOKEN': '{{csrf_token()}}'

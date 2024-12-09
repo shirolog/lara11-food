@@ -18,4 +18,11 @@ class Category extends Model
 
         return $this->hasMany(Product::class);
     }
+
+    //cartsとのリレーション関係
+
+    public function carts(){
+
+        return $this->hasMany(Cart::class);
+    }
 }

@@ -19,9 +19,12 @@ return new class extends Migration
             $table->double('price');
             $table->unsignedBigInteger('quantity');
             $table->string('image', 100);
+            $table->unsignedBigInteger('category_id');
+
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('pid')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

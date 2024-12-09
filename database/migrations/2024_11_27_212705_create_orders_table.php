@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('method', 50);
             $table->string('address', 500);
             $table->string('total_products', 1000);
-            $table->integer('total_price');
+            $table->decimal('total_price');
             $table->date('placed_on');
+            $table->string('status')->default('pending');
+
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -25,34 +26,34 @@ Route::post('/login', [UserController::class, 'authenticate'])
 
 Route::group(['middleware' => 'auth'] ,function(){
     
-    //add_cart処理に関する記述
+//add_cart処理に関する記述
     Route::post('/add_cart', [UserController::class, 'add_cart'])
     ->name('user.add_cart');
 
     
 
-    //quick_viewページに関する記述
+//quick_viewページに関する記述
     Route::get('/quick_view/{product}', [UserController::class, 'quick_view'])
     ->name('user.quick_view');
 
 
     
-    //aboutページに関する記述
+//aboutページに関する記述
     Route::get('/about', [UserController::class, 'about'])
     ->name('user.about');
 
-    //menuページに関する記述
+//menuページに関する記述
     Route::get('/menu', [UserController::class, 'menu'])
     ->name('user.menu');
 
 
-    //ordersページに関する記述
+//ordersページに関する記述
     Route::get('/orders', [UserController::class, 'orders'])
     ->name('user.orders');
 
 
 
-    //contactページに関する記述
+//contactページに関する記述
     Route::get('/contact', [UserController::class, 'contact'])
     ->name('user.contact');
     Route::post('/contact', [UserController::class, 'contact_store'])
@@ -60,49 +61,71 @@ Route::group(['middleware' => 'auth'] ,function(){
 
 
 
-    //searchページに関する記述
+//searchページに関する記述
     Route::get('/search', [UserController::class, 'search'])
     ->name('user.search');
 
 
-    //categoryページに関する記述
+//categoryページに関する記述
     Route::get('/category/{category}', [UserController::class, 'category'])
     ->name('user.category');
 
 
 
 
-    //cartページに関する記述
+
+//cartページに関する記述
     Route::get('/cart', [UserController::class, 'cart'])
     ->name('user.cart');
+    Route::delete('/cart/{cart}', [UserController::class, 'cart_destroy'])
+    ->name('user.cart_destroy');
+    Route::delete('/cart', [UserController::class, 'cart_all__destroy'])
+    ->name('user.cart_all_destroy');
+    Route::put('/cart/{cart}', [UserController::class, 'cart_update'])
+    ->name('user.cart_update');
 
 
+//cart_categoryページに関する記述
+   Route::get('/cart_category/{category}', [UserController::class, 'cart_category'])
+    ->name('user.cart_category');
 
-    //checkoutページに関する記述
+
+//cart_viewページに関する記述
+    Route::get('/cart_view/{cart}', [UserController::class, 'cart_view'])
+    ->name('user.cart_view');
+ 
+
+//checkoutページに関する記述
     Route::get('/checkout', [UserController::class, 'checkout'])
     ->name('user.checkout');
+    Route::post('/checkout', [UserController::class, 'add_order'])
+    ->name('user.add_order');
 
 
 
-    //profileページに関する記述
+//profileページに関する記述
     Route::get('/profile/{user}', [UserController::class, 'profile'])
     ->name('user.profile');
 
-    //update_profileページに関する記述
+//update_profileページに関する記述
     Route::get('/update_profile/{user}', [UserController::class, 'profile_edit'])
     ->name('user.profile_edit');
     Route::put('/update_profile/{user}', [UserController::class, 'profile_update'])
     ->name('user.profile_update');
 
-    //update_addressページに関する記述
+//update_addressページに関する記述
     Route::get('/update_address/{user}', [UserController::class, 'address_edit'])
     ->name('user.address_edit');
     Route::put('/update_address/{user}', [UserController::class, 'address_update'])
     ->name('user.address_update');
 
-    //logoutに関する記述
+
+
+//logoutに関する記述
     Route::get('/logout', [UserController::class, 'logout'])
     ->name('user.logout');
+
+
 });
 
 
@@ -120,24 +143,45 @@ Route::post('/admin_register', [AdminController::class, 'store'])
 Route::group(['middleware' => 'check-admin'], function(){
 
     
-    //dashboardページに関する記述
+//dashboardページに関する記述
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
     ->name('admin.dashboard');
 
-    //admin_accountsページに関する記述
+//admin_accountsページに関する記述
     Route::get('/admin_accounts', [AdminController::class, 'admin_accounts'])
     ->name('admin.admin_accounts');
     Route::delete('/admin_accounts/{admin}', [AdminController::class, 'admin_accounts_destroy'])
     ->name('admin.admin_accounts_destroy');
 
 
-    //placed_ordersページに関する記述
+//placed_ordersページに関する記述
     Route::get('/placed_orders', [AdminController::class, 'placed_orders'])
     ->name('admin.placed_orders');
+    Route::delete('placed_orders/{order}', [AdminController::class, 'placed_orders_destroy'])
+    ->name('admin.placed_orders_destroy');
+    Route::put('placed_orders/{order}', [AdminController::class, 'placed_orders_update'])
+    ->name('admin.placed_orders_update');
+
+
+//completed_ordersページに関する記述    
+   Route::get('/completed_orders', [AdminController::class, 'completed_orders']) 
+   ->name('admin.completed_orders');
+   Route::delete('completed_orders/{order}', [AdminController::class, 'completed_orders_destroy'])
+   ->name('admin.completed_orders_destroy');
+   Route::put('completed_orders/{order}', [AdminController::class, 'completed_orders_update'])
+   ->name('admin.completed_orders_update');
+
+//pending_ordersページに関する記述    
+   Route::get('/pending_orders', [AdminController::class, 'pending_orders']) 
+   ->name('admin.pending_orders');
+   Route::delete('pending_orders/{order}', [AdminController::class, 'pending_orders_destroy'])
+   ->name('admin.pending_orders_destroy');
+   Route::put('pending_orders/{order}', [AdminController::class, 'pending_orders_update'])
+   ->name('admin.pending_orders_update');
 
 
 
-    //messagesページに関する記述
+//messagesページに関する記述
     Route::get('/messages', [AdminController::class, 'messages'])
     ->name('admin.messages');
     Route::delete('/messages/{message}', [AdminController::class, 'messages_destroy'])
@@ -146,7 +190,7 @@ Route::group(['middleware' => 'check-admin'], function(){
 
 
 
-    //productsページに関する記述
+//productsページに関する記述
     Route::get('/products', [AdminController::class, 'products'])
     ->name('admin.products');
     Route::post('/products', [AdminController::class, 'products_store'])
@@ -157,21 +201,21 @@ Route::group(['middleware' => 'check-admin'], function(){
 
 
 
-    //update_productページに関する記述
+//update_productページに関する記述
     Route::get('/update_product/{product}', [AdminController::class, 'product_edit'])
     ->name('admin.product_edit');
     Route::put('/update_product/{product}', [AdminController::class, 'product_update'])
     ->name('admin.product_update');
 
 
-    //update_profileページに関する記述
+//update_profileページに関する記述
     Route::get('/admin_update_profile/{admin}', [AdminController::class, 'profile_edit'])
     ->name('admin.profile_edit');
     Route::put('/admin_update_profile/{admin}', [AdminController::class, 'profile_update'])
     ->name('admin.profile_update');
 
 
-    //user_accountsページに関する記述
+//user_accountsページに関する記述
     Route::get('/user_accounts', [AdminController::class, 'user_accounts'])
     ->name('admin.user_accounts');
     Route::delete('/user_accounts/{user}', [AdminController::class, 'user_accounts_destroy'])
@@ -179,7 +223,7 @@ Route::group(['middleware' => 'check-admin'], function(){
 
 
 
-    //logout処理に関する記述    
+//logout処理に関する記述    
     Route::get('/admin_logout', [AdminController::class, 'logout'])
     ->name('admin.logout');
     

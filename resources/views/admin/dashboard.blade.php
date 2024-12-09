@@ -21,23 +21,23 @@
             
                 <div class="box">
 
-                        <h3><span>$</span>8<span>/-</span></h3>
+                        <h3><span>$</span>{{$total_pending}}<span>/-</span></h3>
                         <p>total pendings</p>
-                        <a href="./placed_orders.php" class="btn">see orders</a>
+                        <a href="{{url('/pending_orders')}}" class="btn">see orders</a>
                 
                 </div>
             
                 <div class="box">
 
-                        <h3><span>$</span>5<span>/-</span></h3>
+                        <h3><span>$</span>{{$total_complete}}<span>/-</span></h3>
                         <p>total completes</p>
-                        <a href="./placed_orders.php" class="btn">see orders</a>
+                        <a href="{{url('/completed_orders')}}" class="btn">see orders</a>
                 </div>
             
                 <div class="box">
-                    <h3>8</h3>
+                    <h3>${{number_format($total_orders)}}/-</h3>
                     <p>total orders</p>
-                    <a href="./placed_orders.php" class="btn">see orders</a>
+                    <a href="{{url('/placed_orders')}}" class="btn">see orders</a>
                 </div>
             
                 <div class="box">

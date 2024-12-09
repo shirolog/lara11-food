@@ -25,4 +25,10 @@ class Cart extends Model
 
         return $this->belongsTo(Product::class, 'pid');
     }
+
+    //categoryとのリレーション関係
+    public function category(){
+
+        return $this->belongsTo(Category::class);
+    }
 }

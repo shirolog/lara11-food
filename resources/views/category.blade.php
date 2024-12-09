@@ -14,21 +14,22 @@
         <div class="box-container">
             @if($products->isNotEmpty())
                 @foreach($products as $product)
-                <form action="" method="post" class="box">
-                    <input type="hidden" name="pid" value="">
-                    <input type="hidden" name="name" value="">
-                    <input type="hidden" name="price" value="">
-                    <input type="hidden" name="image" value="">
-                    <button type="submit" class="fas fa-eye" name="quick_wiew"></button>
-                    <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
+                <form action="{{route('user.add_cart')}}" method="post" class="box">
+                    @csrf
+                        <input type="hidden" name="pid" value="{{$product->id}}">
+                        <input type="hidden" name="name" value="{{$product->name}}">
+                        <input type="hidden" name="price" value="{{$product->price}}">
+                        <input type="hidden" name="image" value="{{$product->image}}">
+                        <input type="hidden" name="category_id" value="{{$product->category_id}}">
+                        <a href="{{route('user.quick_view', $product->id)}}"><i class="fas fa-eye"></i></a>
                     <img src="{{asset('uploaded_img/'. $product->image)}}" class="image" alt="">
                     <div class="name">{{$product->name}}</div>
                     <div class="flex">
                         <div class="price"><span>$</span>{{number_format($product->price)}}/-</div>
-                        <input type="number" name="qty" class="qty" min="1" max="99"
+                        <input type="number" name="quantity" class="qty" min="1" max="99"
                         value="1" onkeypress="if(this.value.length == 2) return false;">
                     </div>
-                    <input type="submit" name="add_to_cart" class="btn" value="add to cart">
+                    <input type="submit"  class="btn" value="add to cart">
                 </form>
                 @endforeach
             @endif

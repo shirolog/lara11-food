@@ -90,13 +90,14 @@
                     <input type="hidden" name="name" value="{{$product->name}}">
                     <input type="hidden" name="price" value="{{$product->price}}">
                     <input type="hidden" name="image" value="{{$product->image}}">
+                    <input type="hidden" name="category_id" value="{{$product->category_id}}">
                     <a href="{{route('user.quick_view', $product->id)}}"><i class="fas fa-eye"></i></a>
                     <button type="submit" class="fas fa-shopping-cart"></button>
                     <img src="{{asset('uploaded_img/'.$product->image)}}" alt="">
                     <a href="{{route('user.category', $product->category_id)}}" class="cat">{{$product->category->name}}</a>
                     <div class="name">{{$product->name}}</div>
                     <div class="flex">
-                        <div class="price"><span>$</span>{{number_format($product->price)}}</div>
+                        <div class="price"><span>$</span>{{number_format($product->price)}}/-</div>
                         <input type="number" name="quantity" class="qty" min="1" max="99" 
                         value="1" id="qty" onkeypress="if(this.value.length == 2) return false;">
                     </div>

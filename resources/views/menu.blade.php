@@ -23,10 +23,11 @@
                         <input type="hidden" name="name" value="{{$product->name}}">
                         <input type="hidden" name="price" value="{{$product->price}}">
                         <input type="hidden" name="image" value="{{$product->image}}">
+                        <input type="hidden" name="category_id" value="{{$product->category_id}}">
                         <a href="{{route('user.quick_view', $product->id)}}"><i class="fas fa-eye"></i></a>
-                        <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
+                        <button type="submit" class="fas fa-shopping-cart"></button>
                         <img src="{{asset('uploaded_img/'. $product->image)}}" alt="">
-                        <a href="#" class="cat">{{$product->category->name}}</a>
+                        <a href="{{route('user.category', $product->category->id)}}" class="cat">{{$product->category->name}}</a>
                         <div class="name">{{$product->name}}</div>
                         <div class="flex">
                             <div class="price"><span>$</span>{{number_format($product->price)}}/-</div>

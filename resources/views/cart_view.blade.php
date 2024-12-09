@@ -13,22 +13,8 @@
     <!-- products section -->
     <section class="products">
         <h1 class="title">your cart</h1>
-        <div class="cart-total">
-            <p>cart total value : <span>${{number_format($total_cart_value)}}/-</span></p>
-            <a href="{{url('checkout')}}" class="btn {{ $total_cart_value < 1 ? 'disabled' : '' }}">proceed to checkout</a></div>
-
-            <div class="more-btn">
-                <form action="{{route('user.cart_all_destroy')}}" method="post" class="mb-5">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="delete-btn {{$total_cart_value < 1 ? 'disabled' : ''}}"
-                    onclick="return confirm('Delete all from cart?');">delete all</button>
-                </form>
-            </div>
 
         <div class="box-container">
-            @if($carts->isNotEmpty())
-                @foreach($carts as $cart)
 
                 <form action="{{route('user.cart_update', $cart->id)}}" method="post" class="box">
                     @csrf
@@ -38,7 +24,6 @@
                     <input type="hidden" name="price" value="{{$cart->price}}">
                     <input type="hidden" name="image" value="{{$cart->image}}">
                     <input type="hidden" name="category_id" value="{{$cart->product->category_id}}">
-                    <a href="{{route('user.cart_view', $cart->id)}}"><i class="fas fa-eye"></i></a>
                     <button type="button" class="fas fa-times delete"  data-id="{{$cart->id}}"></button>
                     <img src="{{asset('uploaded_img/'.$cart->image)}}" alt="">
                     <a href="{{route('user.cart_category', $cart->category->id)}}" class="cat">{{$cart->category->name}}</a>
@@ -51,16 +36,7 @@
                     </div>
                     <div class="sub-total">sub total : <span>${{number_format($cart->price * $cart->quantity)}}/-</span></div>
                 </form>
-                @endforeach
-            @endif
         </div>
-
-   
-
-        
-        @if($carts->isNotEmpty())
-            <div class="page mt-5" style="width: 100%;">{!! $carts->links('vendor.pagination.bootstrap-5') !!}</div>
-        @endif
     </section>
 
 @endsection
@@ -93,7 +69,7 @@
                 },
                 success:function(response){
                     if(response.status){
-                        window.location.reload();
+                        window.location.href = '{{route("user.cart")}}';
                     }
                 }
             })

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Message;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Auth\Events\Logout;
@@ -101,7 +102,7 @@ class AdminController extends Controller
 
 //dashboardページに関する記述
 
-    public function dashboard(){
+    public function dashboard(Order $order){
 
         $user_account_total = User::all()->count();
 
@@ -111,8 +112,18 @@ class AdminController extends Controller
 
         $total_messages = Message::all()->count();
 
+        $all_orders = Order::all();
+
+        $total_orders = $all_orders->pluck('total_price')->sum();
+
+
+        $total_complete = Order::where('status', 'completed')->sum('total_price');
+
+        $total_pending = Order::where('status', 'pending')->sum('total_price');
+
+
         return view('admin.dashboard', compact('user_account_total',
-        'admin_account_total', 'products_total', 'total_messages'));
+        'admin_account_total', 'products_total', 'total_messages', 'total_orders', 'total_complete', 'total_pending'));
     }
 
 
@@ -142,10 +153,134 @@ class AdminController extends Controller
 
 //placed_ordersページに関する記述
 
-    public function placed_orders(){
+    public function placed_orders(Request $request){
 
-        return view('admin.placed_orders');
+ 
+    
+        $orders = Order::orderBy('created_at', 'ASC')->paginate(6); 
+    
+        return view('admin.placed_orders', compact('orders'));
     }
+
+
+    public function placed_orders_destroy(Order $order){
+
+        $order->delete();
+
+        session()->flash('success', 'This order deleted sccessfully!');
+
+        return response()->json([
+
+            'status' => true,
+        ]);
+    }
+
+
+    public function placed_orders_update(Request $request, Order $order){
+
+        $validator = Validator::make($request->all(), [
+
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()){
+
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $order->status = $request->input('status');
+        $order->save();
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
+
+
+//Completed_ordersページに関する記述
+
+    public function completed_orders(){
+
+        $orders = Order::where('status', 'completed')->orderBy('created_at', 'ASC')->paginate(1);
+
+        return view('admin.completed_orders', compact('orders'));
+    }
+
+    
+    public function completed_orders_destroy(Order $order){
+
+        $order->delete();
+
+        session()->flash('success', 'This order deleted sccessfully!');
+
+        return response()->json([
+
+            'status' => true,
+        ]);
+    }
+
+
+    public function completed_orders_update(Request $request, Order $order){
+
+        
+        $validator = Validator::make($request->all(), [
+
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()){
+
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $order->status = $request->input('status');
+        $order->save();
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
+
+//pending_ordersページに関する記述
+
+    public function pending_orders(){
+
+        $orders = Order::where('status', 'pending')->orderBy('created_at', 'ASC')->paginate(1);
+
+        return view('admin.pending_orders', compact('orders'));
+    }
+
+    
+    public function pending_orders_destroy(Order $order){
+
+        $order->delete();
+
+        session()->flash('success', 'This order deleted sccessfully!');
+
+        return response()->json([
+
+            'status' => true,
+        ]);
+    }
+
+
+    public function pending_orders_update(Request $request, Order $order){
+
+        
+        $validator = Validator::make($request->all(), [
+
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()){
+
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $order->status = $request->input('status');
+        $order->save();
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
+
+
+
 
 
 //messagesページに関する記述

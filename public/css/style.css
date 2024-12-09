@@ -251,7 +251,10 @@ section{
     color: var(--white) !important;
 }
 
-
+.delete-btn.disabled{
+    pointer-events: none;
+    opacity: .5;
+}
 
 .header .flex .profile{
     position: absolute;
@@ -678,6 +681,11 @@ section{
 .products .cart-total .btn{
     margin-top: 0;
     border-radius: .5rem;
+}
+
+.products .cart-total .disable{
+    opacity: .5;
+    pointer-events: none;
 }
 
 

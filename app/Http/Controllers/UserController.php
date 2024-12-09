@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Message;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -166,7 +167,9 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    return view('orders', compact('cart_total'));
+    $orders = Order::where('user_id', Auth::user()->id)->orderBy('created_at', 'ASC')->get();
+
+    return view('orders', compact('cart_total', 'orders'));
   }
 
 
@@ -215,7 +218,7 @@ class UserController extends Controller
 
 //searchページに関する記述
 
-  public function search(){
+  public function search(Request $request){
     
     if (Auth::check()) {
       $cart_total = Cart::where('user_id', Auth::user()->id)->count();
@@ -223,7 +226,18 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    return view('search', compact('cart_total'));
+    $search_box =  $request->input('search_box');
+
+    if(!empty($search_box)){
+
+      $products = Product::where('name', 'like', '%'.$search_box.'%')->paginate(6)->appends(['search_box' => $search_box]);
+
+    }else{
+      $products = collect();
+    }
+
+
+    return view('search', compact('cart_total', 'products'));
   }
 
 
@@ -255,12 +269,15 @@ class UserController extends Controller
         'price' => 'required',
         'quantity' => 'required|min:1|max:99',
         'image' => 'required',
+        'category_id' => 'required',
     ]);
 
     if($validator->fails()){
 
       return redirect()->back()->withInput()->withErrors($validator);
     }
+
+    
 
     $cart = new Cart;
 
@@ -270,7 +287,9 @@ class UserController extends Controller
     $cart->price = $request->input('price');
     $cart->quantity = $request->input('quantity');
     $cart->image = $request->input('image');
+    $cart->category_id = $request->input('category_id');
     $cart->save();
+
 
     return redirect()->back()->with('success', 'Cart added successfully!');
   }
@@ -281,15 +300,116 @@ class UserController extends Controller
 
   public function cart(){
 
+    if (Auth::check()) {
+      $cart_total = Cart::where('user_id', Auth::user()->id)->count();
+  } else {
+      $cart_total = 0;
+  }
+  
+  $allCarts = Cart::where('user_id', Auth::user()->id)->get(); 
+  
+  $total_cart_value = $allCarts->sum(function ($cart) {
+      return $cart->price * $cart->quantity;
+  });
+  
+  $carts = Cart::where('user_id', Auth::user()->id)
+      ->with('product')
+      ->orderBy('created_at', 'ASC')
+      ->paginate(6);
+  
+  return view('cart', compact('cart_total', 'carts', 'total_cart_value'));
+  }
+
+
+  public function cart_destroy(Cart $cart){
+
+    $cart->delete();
+
+    session()->flash('success', 'This product deleted from cart!');
+
+     return response()->json([
+        
+        'status' => true
+     ]);
+  }
+
+  public function cart_all__destroy(){
+
+    Cart::where('user_id', Auth::user()->id)->delete();
+
+    session()->flash('success', 'All products have deleted from your cart.');
+
+    return redirect()->route('user.cart');
+  }
+
+
+  public function cart_update(Request $request, Cart $cart){
+
+      $validator = Validator::make($request->all(),[
+
+          'pid' => 'required',
+          'name' => 'required',
+          'price' => 'required',
+          'quantity' => 'required',
+          'image' => 'required',
+          'category_id' => 'required',
+      ]);
+
+      if($validator->fails()){
+
+        return redirect()->back()->withInput()->withErrors($validator);
+
+      }
+
+      $cart->user_id = Auth::user()->id;
+      $cart->pid = $request->input('pid');
+      $cart->name = $request->input('name');
+      $cart->price = $request->input('price');
+      $cart->image = $request->input('image');
+      $cart->quantity = $request->input('quantity');
+      $cart->category_id = $request->input('category_id');
+      $cart->save();
+
+      return redirect()->back()->with('success', 'Product quantity updated successfully!');
+  }
+
+
+//cart_categoryページに関する記述
     
+  public function cart_category(Category $category){
+
+
     if (Auth::check()) {
       $cart_total = Cart::where('user_id', Auth::user()->id)->count();
     } else {
         $cart_total = 0;
     }
 
-    return view('cart', compact('cart_total'));
+    $carts = Cart::where('user_id', Auth::user()->id)
+    ->where('category_id', $category->id)
+    ->with('product')->orderBy('created_at', 'ASC')
+    ->paginate(6);
+
+
+    return view('cart_category', compact('cart_total', 'carts'));
   }
+
+  
+//cart_viewページに関する記述
+  
+  public function cart_view(Cart $cart){
+
+    if (Auth::check()) {
+      $cart_total = Cart::where('user_id', Auth::user()->id)->count();
+    } else {
+        $cart_total = 0;
+    }
+
+    return view('cart_view', compact('cart_total', 'cart'));
+  }
+
+
+
 
 //categoryページに関する記述
 
@@ -302,7 +422,7 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    $products = Product::where('category_id', $category->id)->paginate(1);
+    $products = Product::where('category_id', $category->id)->paginate(10);
     
 
     return view('category', compact('cart_total', 'products'));
@@ -434,7 +554,7 @@ class UserController extends Controller
 
 //checkoutページに関する記述
 
-  public function checkout(){
+  public function checkout(Cart $cart){
 
     
     if (Auth::check()) {
@@ -443,8 +563,63 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    return view('checkout', compact('cart_total'));
+    $carts = Cart::where('user_id', Auth::user()->id)->orderBy('created_at')->get();
+
+    $total_cart_value = $carts->sum(function($cart){
+      return $cart->price * $cart->quantity;
+    });
+
+    return view('checkout', compact('cart_total', 'carts', 'total_cart_value'));
   }
+
+  public function add_order(Request $request){
+
+    $validator = Validator::make($request->all(), [
+
+      'method' => 'required',
+      'product.*' => 'required|string',
+      'quantity.*' => 'required|integer',
+      'total_price' => 'required',
+    ]);
+
+    if($validator->fails()){
+
+      return redirect()->back()->withInput()->withErrors($validator);
+
+    }
+
+    $productNames = $request->input('product');
+    $quantities = $request->input('quantity');
+    $total_products = [];
+
+    foreach($productNames as $index => $productName){
+
+      $quantity = $quantities[$index];
+      $total_products[] = "{$productName} ({$quantity})";
+    }
+
+    $total_products_string = implode('-', $total_products);
+
+    $order = new Order;
+
+    $order->user_id = Auth::user()->id;
+    $order->name = Auth::user()->name;
+    $order->number = Auth::user()->number;
+    $order->email = Auth::user()->email;
+    $order->address = Auth::user()->address;
+    $order->method = $request->input('method');
+    $order->total_price = str_replace(',', '', $request->input('total_price'));;
+    $order->placed_on = date('Y-m-d');
+    $order->total_products = $total_products_string;
+    $order->save();
+    
+    Cart::where('user_id', Auth::user()->id)->delete();
+
+
+    return redirect()->route('user.orders')->with('success', 'Order placed successfully!');
+
+  }
+
 
 
 //logoutに関する記述
