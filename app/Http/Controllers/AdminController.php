@@ -392,7 +392,7 @@ class AdminController extends Controller
 
             'name' => 'nullable|max:50|unique:products,name,'. $product->id,
             'category_id' => 'nullable',
-            'price'  => 'nullable|numeric|min:0',
+            'price'  => 'nullable|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,webp,png',
         ]);
 
@@ -403,7 +403,7 @@ class AdminController extends Controller
 
         $product->name = $request->input('name');
         $product->category_id = $request->input('category_id');
-        $product->price = $request->input('price');
+        $product->price = str_replace(',' ,'', $request->input('price'));
         $product->save();
 
         if(!empty($request->file('image'))){

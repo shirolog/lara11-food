@@ -44,7 +44,7 @@
                     <a href="{{route('user.cart_category', $cart->category->id)}}" class="cat">{{$cart->category->name}}</a>
                     <div class="name">{{$cart->name}}</div>
                     <div class="flex">
-                        <div class="price"><span>$</span>{{$cart->price}}/-</div>
+                        <div class="price"><span>$</span>{{number_format($cart->price)}}/-</div>
                         <input type="number" name="quantity" class="qty" min="1" max="99" 
                         value="{{old('quantity', $cart->quantity)}}" id="qty" onkeypress="if(this.value.length == 2) return false;">
                         <button type="submit" class="fas fa-edit"></button>

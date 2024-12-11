@@ -40,7 +40,20 @@ class UserController extends Controller
         'number' => 'required|numeric|digits:10|unique:users,number',
         'password' => 'required|confirmed|min:3',
         'password_confirmation' => 'required',
-    ],);
+    ],[
+      'name.required' => 'The name is required.',
+      'email.required' => 'The email address is required.',
+      'email.email' => 'Please enter a valid email address.',
+      'email.unique' => 'This email address is already in use.',
+      'number.required' => 'The phone number is required.',
+      'number.numeric' => 'The phone number must be numeric.',
+      'number.digits' => 'The phone number must be 10 digits.',
+      'number.unique' => 'This phone number is already in use.',
+      'password.required' => 'The password is required.',
+      'password.confirmed' => 'The password confirmation does not match.',
+      'password.min' => 'The password must be at least 3 characters.',
+      'password_confirmation.required' => 'The password confirmation is required.',
+    ]);
 
     if($validator->fails()){
 

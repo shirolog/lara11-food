@@ -146,6 +146,7 @@ Route::group(['middleware' => 'check-admin'], function(){
 //dashboardページに関する記述
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
     ->name('admin.dashboard');
+    
 
 //admin_accountsページに関する記述
     Route::get('/admin_accounts', [AdminController::class, 'admin_accounts'])
@@ -171,6 +172,7 @@ Route::group(['middleware' => 'check-admin'], function(){
    Route::put('completed_orders/{order}', [AdminController::class, 'completed_orders_update'])
    ->name('admin.completed_orders_update');
 
+   
 //pending_ordersページに関する記述    
    Route::get('/pending_orders', [AdminController::class, 'pending_orders']) 
    ->name('admin.pending_orders');
