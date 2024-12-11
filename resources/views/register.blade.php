@@ -10,16 +10,16 @@
     <form action="{{route('user.store')}}" method="post">
       @csrf
         <h3>register now</h3>
-        <input type="text" name="name" class="box" placeholder="enter your name" maxlength="50" value="{{old('name')}}" required>
+        <input type="text" name="name" class="box" placeholder="enter your name" maxlength="50"  required>
         @error('name')
           <p class="invalid-feedback">{{$message}}</p> 
         @enderror
-        <input type="email" name="email" class="box" placeholder="enter your email" value="{{old('email')}}"
+        <input type="email" name="email" class="box" placeholder="enter your email" 
         oninput="this.value = this.value.replace(/\s/g, '')" required>
         @error('email')
           <p class="invalid-feedback">{{$message}}</p> 
         @enderror
-        <input type="number" name="number" class="box" placeholder="enter your number" value="{{old('number')}}"
+        <input type="number" name="number" class="box" placeholder="enter your number" 
         oninput="this.value = this.value.replace(/\s/g, '').slice(0, 10)" required min="0" max="9999999999" maxlength="10">
         @error('number')
           <p class="invalid-feedback">{{$message}}</p> 

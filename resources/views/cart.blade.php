@@ -14,7 +14,7 @@
     <section class="products">
         <h1 class="title">your cart</h1>
         <div class="cart-total">
-            <p>cart total value : <span>${{number_format($total_cart_value)}}/-</span></p>
+            <p>cart total : <span>${{number_format($total_cart_value)}}/-</span></p>
             <a href="{{url('checkout')}}" class="btn {{ $total_cart_value < 1 ? 'disabled' : '' }}">proceed to checkout</a></div>
 
             <div class="more-btn">

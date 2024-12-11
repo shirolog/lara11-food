@@ -72,6 +72,7 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
+
     return view('login', compact('cart_total'));
   }
 
@@ -87,6 +88,8 @@ class UserController extends Controller
 
       return redirect()->route('user.login')->withInput()->withErrors($validator);
     }
+
+    
 
     if(Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])){
 
@@ -422,7 +425,7 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    $products = Product::where('category_id', $category->id)->paginate(10);
+    $products = Product::where('category_id', $category->id)->paginate(6);
     
 
     return view('category', compact('cart_total', 'products'));
@@ -563,7 +566,7 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    $carts = Cart::where('user_id', Auth::user()->id)->orderBy('created_at')->get();
+    $carts = Cart::where('user_id', Auth::user()->id)->orderBy('created_at', 'ASC')->get();
 
     $total_cart_value = $carts->sum(function($cart){
       return $cart->price * $cart->quantity;

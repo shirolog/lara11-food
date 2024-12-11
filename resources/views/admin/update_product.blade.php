@@ -22,9 +22,11 @@
                 <span>update name</span>
                 <input type="text" name="name" class="box" placeholder="enter product name"
                 value="{{old('name', $product->name)}}" maxlength="100">
+                
                 <span>update price</span>
-                <input type="number" name="price" class="box" placeholder="enter product price" 
+                <input type="text" name="price" class="box" placeholder="enter product price" 
                 value="{{old('price', number_format($product->price))}}" min="0" max="9999999999" onkeypress="if(this.value.length == 10) return false;">
+                
                 <span>update categories</span>
                 <select name="category_id" id="category" class="box" required>
                     @foreach($categories as $category)
