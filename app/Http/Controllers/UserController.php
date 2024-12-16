@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 
+
 class UserController extends Controller
 {   
 
@@ -32,36 +33,23 @@ class UserController extends Controller
 
   }
 
-  public function store(Request $request){
-
+public function store(Request $request)
+{
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'email' => 'required|email|unique:users,email',
         'number' => 'required|numeric|digits:10|unique:users,number',
         'password' => 'required|confirmed|min:3',
         'password_confirmation' => 'required',
-    ],[
-      'name.required' => 'The name is required.',
-      'email.required' => 'The email address is required.',
-      'email.email' => 'Please enter a valid email address.',
-      'email.unique' => 'This email address is already in use.',
-      'number.required' => 'The phone number is required.',
-      'number.numeric' => 'The phone number must be numeric.',
-      'number.digits' => 'The phone number must be 10 digits.',
-      'number.unique' => 'This phone number is already in use.',
-      'password.required' => 'The password is required.',
-      'password.confirmed' => 'The password confirmation does not match.',
-      'password.min' => 'The password must be at least 3 characters.',
-      'password_confirmation.required' => 'The password confirmation is required.',
     ]);
 
-    if($validator->fails()){
-
-        return redirect()->route('user.register')->withInput()->withErrors($validator);
+    if ($validator->fails()) {
+        return redirect()->route('user.register')
+            ->withInput()
+            ->withErrors($validator);
     }
 
     $user = new User;
-
     $user->name = $request->input('name');
     $user->email = $request->input('email');
     $user->number = $request->input('number');
@@ -69,8 +57,8 @@ class UserController extends Controller
     $user->save();
 
     return redirect()->route('user.login')->with('success', 'You have registered successfully!');
+}
 
-  }
 
 
 
@@ -576,7 +564,7 @@ class UserController extends Controller
         $cart_total = 0;
     }
 
-    $carts = Cart::where('user_id', Auth::user()->id)->orderBy('created_at')->get();
+    $carts = Cart::where('user_id', Auth::user()->id)->orderBy('created_at', 'ASC')->get();
 
     $total_cart_value = $carts->sum(function($cart){
       return $cart->price * $cart->quantity;

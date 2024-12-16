@@ -13,7 +13,7 @@
         <input type="email" name="email" class="box" placeholder="enter your email"
         oninput="this.value = this.value.replace(/\s/g, '')" required  maxlength="50">
         @error('email')
-          <p class="invalid-feedback">{{$message}}</p> 
+          <p class="invalid-feedback">{{ $message }}</p>
         @enderror
         <input type="password" name="password" class="box" placeholder="enter your password"
         oninput="this.value = this.value.replace(/\s/g, '')" required  maxlength="50">
