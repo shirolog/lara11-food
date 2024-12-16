@@ -403,7 +403,7 @@ class AdminController extends Controller
 
         $product->name = $request->input('name');
         $product->category_id = $request->input('category_id');
-        $product->price = str_replace(',', '', $request->input('price'));
+        $product->price = $request->input('price');
         $product->save();
 
         if(!empty($request->file('image'))){

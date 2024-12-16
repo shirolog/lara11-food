@@ -22,7 +22,7 @@
                         <p>number : <span>{{$order->number}}</span></p>
                         <p>address : <span>{{$order->address}}</span></p>
                         <p>total products : <span>{{$order->total_products}}</span></p>
-                        <p>total price : <span>${{$order->total_price}}/-</span></p>
+                        <p>total price : <span>${{number_format($order->total_price)}}/-</span></p>
                         <p>payment method : <span>{{$order->method}}</span></p>
                         <form action="{{route('admin.pending_orders_update', $order->id)}}" method="post">
                             @csrf

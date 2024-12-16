@@ -21,7 +21,7 @@
             
                 <div class="box">
 
-                        <h3><span>$</span>{{$total_pending}}<span>/-</span></h3>
+                        <h3><span>$</span>{{number_format($total_pending)}}<span>/-</span></h3>
                         <p>total pendings</p>
                         <a href="{{url('/pending_orders')}}" class="btn">see orders</a>
                 
@@ -29,7 +29,7 @@
             
                 <div class="box">
 
-                        <h3><span>$</span>{{$total_complete}}<span>/-</span></h3>
+                        <h3><span>$</span>{{number_format($total_complete)}}<span>/-</span></h3>
                         <p>total completes</p>
                         <a href="{{url('/completed_orders')}}" class="btn">see orders</a>
                 </div>

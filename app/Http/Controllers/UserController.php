@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 
+
 class UserController extends Controller
 {   
 
@@ -32,23 +33,23 @@ class UserController extends Controller
 
   }
 
-  public function store(Request $request){
-
+public function store(Request $request)
+{
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'email' => 'required|email|unique:users,email',
         'number' => 'required|numeric|digits:10|unique:users,number',
         'password' => 'required|confirmed|min:3',
         'password_confirmation' => 'required',
-    ],);
+    ]);
 
-    if($validator->fails()){
-
-        return redirect()->route('user.register')->withInput()->withErrors($validator);
+    if ($validator->fails()) {
+        return redirect()->route('user.register')
+            ->withInput()
+            ->withErrors($validator);
     }
 
     $user = new User;
-
     $user->name = $request->input('name');
     $user->email = $request->input('email');
     $user->number = $request->input('number');
@@ -56,8 +57,8 @@ class UserController extends Controller
     $user->save();
 
     return redirect()->route('user.login')->with('success', 'You have registered successfully!');
+}
 
-  }
 
 
 
