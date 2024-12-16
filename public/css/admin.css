@@ -522,10 +522,12 @@ section {
   color: var(--black);
   padding: 0.5rem 0;
   line-height: 2;
+  
 }
 
 .placed-orders .box-container .box p span {
   color: var(--main-color);
+  word-break: break-all;
 }
 
 .placed-orders .box-container .box .drop-down {

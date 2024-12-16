@@ -199,7 +199,7 @@ class AdminController extends Controller
 
     public function completed_orders(){
 
-        $orders = Order::where('status', 'completed')->orderBy('created_at', 'ASC')->paginate(1);
+        $orders = Order::where('status', 'completed')->orderBy('created_at', 'ASC')->paginate(6);
 
         return view('admin.completed_orders', compact('orders'));
     }
@@ -234,14 +234,14 @@ class AdminController extends Controller
         $order->status = $request->input('status');
         $order->save();
 
-        return redirect()->back()->with('success', 'Status updated successfully!');
+        return redirect()->route('admin.completed_orders')->with('success', 'Status updated successfully!');
     }
 
 //pending_ordersページに関する記述
 
     public function pending_orders(){
 
-        $orders = Order::where('status', 'pending')->orderBy('created_at', 'ASC')->paginate(1);
+        $orders = Order::where('status', 'pending')->orderBy('created_at', 'ASC')->paginate(6);
 
         return view('admin.pending_orders', compact('orders'));
     }
@@ -276,7 +276,7 @@ class AdminController extends Controller
         $order->status = $request->input('status');
         $order->save();
 
-        return redirect()->back()->with('success', 'Status updated successfully!');
+        return redirect()->route('admin.pending_orders')->with('success', 'Status updated successfully!');
     }
 
 
