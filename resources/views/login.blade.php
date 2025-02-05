@@ -20,6 +20,10 @@
         @error('password')
           <p class="text-danger">{{$message}}</p> 
         @enderror
+
+        @if(session('error'))
+          <p class="text-danger">{{session('error')}}</p> 
+        @endif
         <input type="submit" class="btn" value="login now">
         <p>don't have an account? <a href="{{url('/register')}}">register now</a></p>
     </form>
