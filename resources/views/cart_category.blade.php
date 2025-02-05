@@ -47,7 +47,7 @@
 
         
         @if($carts->isNotEmpty())
-            <div class="page mt-5" style="width: 100%;">{!! $carts->links('vendor.pagination.bootstrap-5') !!}</div>
+            <div class="page mt-5" style="width: 100%;">{!! $carts->onEachSide(1)->links('vendor.pagination.bootstrap-5') !!}</div>
         @endif
     </section>
 

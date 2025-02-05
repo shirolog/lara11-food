@@ -35,7 +35,7 @@
             @endif
         </div>
         @if($products->isNotEmpty())
-            <div class="page mt-5" style="width: 100%;">{!! $products->links('vendor.pagination.bootstrap-5') !!}</div>
+            <div class="page mt-5" style="width: 100%;">{!! $products->onEachSide(1)->links('vendor.pagination.bootstrap-5') !!}</div>
         @endif
     </section>
 @endsection

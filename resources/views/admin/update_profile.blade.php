@@ -16,22 +16,22 @@
             <input type="text" name="name" maxlength="20" class="box" placeholder="enter your username" 
             oninput="this.value = this.value.replace(/\s/g, '')" value="{{old('name', $admin->name)}}" required>
             @error('name')
-                <p class="invalid-feedback">{{$message}}</p> 
+                <p class="text-danger">{{$message}}</p> 
             @enderror
             <input type="password" name="old_password" class="box" maxlength="20" placeholder="enter your old password" 
             oninput="this.value = this.value.replace(/\s/g, '')" required>
-            @error('password')
-                <p class="invalid-feedback">{{$message}}</p> 
+            @error('old_password')
+                <p class="text-danger">{{$message}}</p> 
             @enderror
             <input type="password" name="new_password" class="box" maxlength="20" placeholder="enter your new password" 
             oninput="this.value = this.value.replace(/\s/g, '')" required>
             @error('new_password')
-                <p class="invalid-feedback">{{$message}}</p> 
+                <p class="text-danger">{{$message}}</p> 
             @enderror
             <input type="password" name="new_password_confirmation" class="box" maxlength="20" placeholder="confirm your password" 
             oninput="this.value = this.value.replace(/\s/g, '')" required>
             @error('new_password_confirmation')
-                <p class="invalid-feedback">{{$message}}</p> 
+                <p class="text-danger">{{$message}}</p> 
             @enderror
             <input type="submit" name="submit" class="btn" value="update now">
         </form>

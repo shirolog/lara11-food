@@ -32,12 +32,12 @@
             <input type="text" name="name" class="box" placeholder="enter your username"
             required maxlength="20" oninput="this.value = this.value.replace(/\s/g,'');" value="{{old('name')}}">
             @error('name')
-                <p class="invalid-feedback">{{$message}}</p> 
+                <p class="text-danger">{{$message}}</p> 
             @enderror
             <input type="password" name="password" class="box" placeholder="enter your password"
             required maxlength="20" oninput="this.value = this.value.replace(/\s/g,'');">
             @error('password')
-                <p class="invalid-feedback">{{$message}}</p> 
+                <p class="text-danger">{{$message}}</p> 
             @enderror
             <input type="submit" class="btn" value="login now">
             <p class="link">don't have an account? <a href="{{url('/admin_register')}}">register now</a></p>

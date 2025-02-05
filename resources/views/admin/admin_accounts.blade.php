@@ -35,7 +35,7 @@
         </div>
         
         @if($admins->isNotEmpty())
-            <div class="page mt-5" style="width: 100%;">{!! $admins->links('vendor.pagination.bootstrap-5') !!}</div>
+            <div class="page mt-5" style="width: 100%;">{!! $admins->onEachSide(1)->links('vendor.pagination.bootstrap-5') !!}</div>
         @endif
 
     </section>

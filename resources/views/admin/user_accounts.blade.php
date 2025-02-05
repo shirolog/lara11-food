@@ -28,7 +28,7 @@
 
         
         @if($users->isNotEmpty())
-            <div class="page mt-5" style="width: 100%;">{!! $users->links('vendor.pagination.bootstrap-5') !!}</div>
+            <div class="page mt-5" style="width: 100%;">{!! $users->onEachSide(1)->links('vendor.pagination.bootstrap-5') !!}</div>
         @endif
 
     </section>

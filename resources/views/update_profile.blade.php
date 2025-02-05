@@ -14,27 +14,27 @@
         <input type="text" name="name" class="box" placeholder="enter your name" maxlength="50"
         oninput="this.value = this.value.replace(/\s/g, '')" required value="{{old('name', $user->name)}}">
         @error('name')
-          <p class="invalid-feedback">{{$message}}</p> 
+          <p class="text-danger">{{$message}}</p> 
         @enderror
         <input type="email" name="email" class="box" placeholder="enter your email"
         oninput="this.value = this.value.replace(/\s/g, '')" required  maxlength="50" value="{{old('email', $user->email)}}">
         @error('email')
-          <p class="invalid-feedback">{{$message}}</p> 
+          <p class="text-danger">{{$message}}</p> 
         @enderror
         <input type="password" name="old_password" class="box" placeholder="enter your old password"
         oninput="this.value = this.value.replace(/\s/g, '')" maxlength="50">
         @error('password')
-          <p class="invalid-feedback">{{$message}}</p> 
+          <p class="text-danger">{{$message}}</p> 
         @enderror
         <input type="password" name="new_password" class="box" placeholder="enter your new password"
         oninput="this.value = this.value.replace(/\s/g, '')" maxlength="50">
         @error('new_password')
-          <p class="invalid-feedback">{{$message}}</p> 
+          <p class="text-danger">{{$message}}</p> 
         @enderror
         <input type="password" name="new_password_confirmation" class="box" placeholder="cofirm your new password"
         oninput="this.value = this.value.replace(/\s/g, '')" maxlength="50">
         @error('new_password_confirmation')
-          <p class="invalid-feedback">{{$message}}</p> 
+          <p class="text-danger">{{$message}}</p> 
         @enderror
         <input type="submit" class="btn" value="update now">
     </form>

@@ -27,7 +27,7 @@
             @endif
         </div>
         @if($messages->isNotEmpty())
-            <div class="page mt-5" style="width: 100%;">{!! $messages->links('vendor.pagination.bootstrap-5') !!}</div>
+            <div class="page mt-5" style="width: 100%;">{!! $messages->onEachSide(1)->links('vendor.pagination.bootstrap-5') !!}</div>
         @endif
     </section>
 
